@@ -7,6 +7,7 @@ const Swatch = ({params, onClick}) => {
   return (
     <div style={{display: 'flex', justifyContent: 'center'}}>
       <div style={{backgroundColor: params.color, width: 75, height: 75}}></div>
+      <button onClick={() => onClick()}>do a click</button>
     </div>
   )
 }
@@ -34,7 +35,9 @@ function App() {
   }
 
   const params = useMemo(() => ({color}), [color])
-  const onClick = useCallback(() => {}, [])
+  const onClick = useCallback(() => {
+    console.log('I have made a memoize click')
+  }, [])
 
   console.log('App is re-rendering')
 
@@ -47,6 +50,7 @@ function App() {
       </div>
       <div>
         <MemoizeSwatch params={params} onClick={onClick} />
+        {/* <Swatch params={params} onClick={onClick} /> */}
         {/* <MemoizeSwatch params={{color}} /> */}
       </div>
     </div>
