@@ -1,25 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import {useState, memo, useMemo, useCallback} from 'react'
 
-function App() {
+const Swatch = ({params, onClick}) => {
+  console.log('Swatch is re-rendering')
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{display: 'flex', justifyContent: 'center'}}>
+      <div style={{backgroundColor: params.color, width: 75, height: 75}}></div>
     </div>
-  );
+  )
 }
 
-export default App;
+// * Memo first option solution: Compare its prevProps with nextProps
+// * for objects and arrays that are compared by reference.
+
+// const MemoizeSwatch = memo(Swatch, (prevProps, nextProps) => {
+// console.log('What is it ? :', prevProps.params.color)
+// return prevProps.params.color === nextProps.params.color
+// })
+
+const MemoizeSwatch = memo(Swatch)
+
+function App() {
+  const [state, setState] = useState(0)
+  const [color, setColor] = useState('red')
+
+  const handleSum = () => {
+    setState(prev => prev + 1)
+  }
+
+  const handleColor = () => {
+    setColor(color === 'red' ? 'blue' : 'red')
+  }
+
+  const params = useMemo(() => ({color}), [color])
+  const onClick = useCallback(() => {}, [])
+
+  console.log('App is re-rendering')
+
+  return (
+    <div className="App">
+      <div>
+        <div>{state}</div>
+        <button onClick={handleSum}>re-render Sum</button>
+        <button onClick={handleColor}>re-render Swatch</button>
+      </div>
+      <div>
+        <MemoizeSwatch params={params} onClick={onClick} />
+        {/* <MemoizeSwatch params={{color}} /> */}
+      </div>
+    </div>
+  )
+}
+
+export default App
